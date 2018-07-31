@@ -892,24 +892,21 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::general_work(int noutput_items __attrib
             float prompt_I;
             float prompt_Q;
             float tmp_E, tmp_P, tmp_L;
-	    std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
-	    int tmp_E_lock, tmp_P_lock, tmp_L_lock;
+	        std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
+	        int tmp_E_lock, tmp_P_lock, tmp_L_lock;
             float tmp_VE = 0.0;
             float tmp_VL = 0.0;
             float tmp_float;
             prompt_I = d_correlator_outs[1].real();
             prompt_Q = d_correlator_outs[1].imag();
-            //tmp_E = std::abs<float>(d_correlator_outs[0]);
-            tmp_E = d_correlator_outs[0];
-	        tmp_E_ts = std::chrono::high_resolution_clock::now();
+            tmp_E = std::abs<float>(d_correlator_outs[0]);
+            tmp_E_ts = std::chrono::high_resolution_clock::now();
 	        tmp_E_lock = static_cast<int>(d_preamble_synchronized);
-            //tmp_P = std::abs<float>(d_correlator_outs[1]);
-            tmp_P = d_correlator_outs[1];
-	        tmp_P_ts = std::chrono::high_resolution_clock::now();
+            tmp_P = std::abs<float>(d_correlator_outs[1]);
+            tmp_P_ts = std::chrono::high_resolution_clock::now();
 	        tmp_P_lock = static_cast<int>(d_preamble_synchronized);
-            //tmp_L = std::abs<float>(d_correlator_outs[2]);
-            tmp_L = d_correlator_outs[2];
-	        tmp_L_ts = std::chrono::high_resolution_clock::now();
+            tmp_L = std::abs<float>(d_correlator_outs[2]);
+            tmp_L_ts = std::chrono::high_resolution_clock::now();
 	        tmp_L_lock = static_cast<int>(d_preamble_synchronized);
             try
                 {
