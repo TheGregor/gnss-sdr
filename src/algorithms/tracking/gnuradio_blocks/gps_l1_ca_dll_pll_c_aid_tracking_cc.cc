@@ -396,14 +396,14 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
                         {
 			    // adjusted to include new variables in file read
                             dump_file.read(reinterpret_cast<char *>(&abs_E[i]), sizeof(float));
-			    dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
-			    dump_file.read(reinterpret_cast<char *>(&abs_E_lock[i]), sizeof(int));
+            			    dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+			                dump_file.read(reinterpret_cast<char *>(&abs_E_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_P[i]), sizeof(float));
-			    dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
-			    dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
+	            		    dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+            			    dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_L[i]), sizeof(float));
-			    dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
-			    dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
+		            	    dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+            			    dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_Q[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&PRN_start_sample_count[i]), sizeof(unsigned long int));
@@ -467,11 +467,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_E_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+	        matvar = Mat_VarCreate("abs_E_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_E_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+	        matvar = Mat_VarCreate("abs_E_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -479,11 +479,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_P_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P, 0);
+	        matvar = Mat_VarCreate("abs_P_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_P_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P, 0);
+	        matvar = Mat_VarCreate("abs_P_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -491,11 +491,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_L_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L, 0);
+	        matvar = Mat_VarCreate("abs_L_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_L_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L, 0);
+	        matvar = Mat_VarCreate("abs_L_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
