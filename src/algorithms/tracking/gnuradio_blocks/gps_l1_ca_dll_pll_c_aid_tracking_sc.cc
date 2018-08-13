@@ -46,7 +46,7 @@
 #include <iostream>
 #include <memory>
 #include <sstream>
-
+#include <chrono>
 
 using google::LogMessage;
 
@@ -362,8 +362,14 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::save_matfile()
             return 1;
         }
     float *abs_E = new float[num_epoch];
+    std::chrono::high_resolution_clock::time_point *abs_E_ts = new std::chrono::high_resolution_clock::time_point[num_epoch];
+    int *abs_E_lock = new int[num_epoch];
     float *abs_P = new float[num_epoch];
+    std::chrono::high_resolution_clock::time_point *abs_P_ts = new std::chrono::high_resolution_clock::time_point[num_epoch];
+    int *abs_P_lock = new int[num_epoch];
     float *abs_L = new float[num_epoch];
+    std::chrono::high_resolution_clock::time_point  *abs_L_ts = new std::chrono::high_resolution_clock::time_point[num_epoch];
+    int *abs_L_lock = new int[num_epoch];
     float *Prompt_I = new float[num_epoch];
     float *Prompt_Q = new float[num_epoch];
     unsigned long int *PRN_start_sample_count = new unsigned long int[num_epoch];
@@ -387,8 +393,14 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::save_matfile()
                     for (long int i = 0; i < num_epoch; i++)
                         {
                             dump_file.read(reinterpret_cast<char *>(&abs_E[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_P[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_L[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(std::chrono::high_resolution_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_Q[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&PRN_start_sample_count[i]), sizeof(unsigned long int));
@@ -412,8 +424,14 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::save_matfile()
         {
             std::cerr << "Problem reading dump file:" << e.what() << std::endl;
             delete[] abs_E;
+            delete[] abs_E_ts;
+            delete[] abs_E_lock;
             delete[] abs_P;
+            delete[] abs_P_ts;
+            delete[] abs_P_lock;
             delete[] abs_L;
+            delete[] abs_L_ts;
+            delete[] abs_L_lock;
             delete[] Prompt_I;
             delete[] Prompt_Q;
             delete[] PRN_start_sample_count;
@@ -540,8 +558,14 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::save_matfile()
         }
     Mat_Close(matfp);
     delete[] abs_E;
+    delete[] abs_E_ts;
+    delete[] abs_E_lock;
     delete[] abs_P;
+    delete[] abs_P_ts;
+    delete[] abs_P_lock;
     delete[] abs_L;
+    delete[] abs_L_ts;
+    delete[] abs_L_lock;
     delete[] Prompt_I;
     delete[] Prompt_Q;
     delete[] PRN_start_sample_count;
@@ -870,15 +894,30 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::general_work(int noutput_items __attrib
             prompt_I = d_correlator_outs_16sc[1].real();
             prompt_Q = d_correlator_outs_16sc[1].imag();
             tmp_E = std::abs<float>(gr_complex(d_correlator_outs_16sc[0].real(), d_correlator_outs_16sc[0].imag()));
+            tmp_E_ts = std::chrono::high_resolution_clock::now();
+            tmp_E_lock = static_cast<int>(d_preamble_synchronized);
             tmp_P = std::abs<float>(gr_complex(d_correlator_outs_16sc[1].real(), d_correlator_outs_16sc[1].imag()));
+            tmp_E_ts = std::chrono::high_resolution_clock::now();
+            tmp_E_lock = static_cast<int>(d_preamble_synchronized);
             tmp_L = std::abs<float>(gr_complex(d_correlator_outs_16sc[2].real(), d_correlator_outs_16sc[2].imag()));
+            tmp_E_ts = std::chrono::high_resolution_clock::now();
+            tmp_E_lock = static_cast<int>(d_preamble_synchronized);
+
             try
                 {
                     // Dump correlators output
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VE), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_VE), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_E), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_ts), sizeof(std::chrono::high_resolution_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_P), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_ts), sizeof(std::chrono::high_resolution_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_ts), sizeof(std::chrono::high_resolution_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_lock), sizeof(int));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     // PROMPT I and Q (to analyze navigation symbols)
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_I), sizeof(float));
