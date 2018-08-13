@@ -467,11 +467,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_E_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_ts, 0);
+	        matvar = Mat_VarCreate("abs_E_ts", MAT_C_UINT64, MAT_T_UINT64, 2, dims, abs_E_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_E_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_lock, 0);
+	        matvar = Mat_VarCreate("abs_E_lock", MAT_C_UINT8, MAT_T_UINT8, 2, dims, abs_E_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -479,11 +479,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_P_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_ts, 0);
+	        matvar = Mat_VarCreate("abs_P_ts", MAT_C_UINT64, MAT_T_UINT64, 2, dims, abs_P_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_P_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_lock, 0);
+	        matvar = Mat_VarCreate("abs_P_lock", MAT_C_UINT8, MAT_T_UINT8, 2, dims, abs_P_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -491,11 +491,11 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_L_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_ts, 0);
+	        matvar = Mat_VarCreate("abs_L_ts", MAT_C_UINT64, MAT_T_UINT64, 2, dims, abs_L_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-	        matvar = Mat_VarCreate("abs_L_lock", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_lock, 0);
+	        matvar = Mat_VarCreate("abs_L_lock", MAT_C_UINT8, MAT_T_UINT8, 2, dims, abs_L_lock, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
