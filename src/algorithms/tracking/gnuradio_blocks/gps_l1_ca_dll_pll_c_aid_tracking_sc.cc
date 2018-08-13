@@ -888,6 +888,8 @@ int gps_l1_ca_dll_pll_c_aid_tracking_sc::general_work(int noutput_items __attrib
             float prompt_I;
             float prompt_Q;
             float tmp_E, tmp_P, tmp_L;
+            std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
+            int tmp_E_lock, tmp_P_lock, tmp_L_lock;
             float tmp_VE = 0.0;
             float tmp_VL = 0.0;
             float tmp_float;

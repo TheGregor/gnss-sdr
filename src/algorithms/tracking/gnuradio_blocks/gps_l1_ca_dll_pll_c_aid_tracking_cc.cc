@@ -463,7 +463,7 @@ int gps_l1_ca_dll_pll_c_aid_tracking_cc::save_matfile()
     if (reinterpret_cast<long *>(matfp) != NULL)
         {
             size_t dims[2] = {1, static_cast<size_t>(num_epoch)};
-            matvar = Mat_VarCreate("abs_E_hello", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_E", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
