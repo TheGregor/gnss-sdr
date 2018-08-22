@@ -649,6 +649,16 @@ bool dll_pll_veml_tracking::acquire_secondary()
         }
 }
 
+//*************************************************************************
+bool dll_pll_veml_tracking::preamble_correlated()
+{
+    int corr_value = 0;
+    if (abs(corr_value) == static_cast<int>(d_secondary_code_length))
+        return true;
+    else
+        return false;
+}
+//*************************************************************************
 
 bool dll_pll_veml_tracking::cn0_and_tracking_lock_status(double coh_integration_time_s)
 {
@@ -872,11 +882,11 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
             int tmp_E_lock, tmp_P_lock, tmp_L_lock;
             tmp_E_ts = std::chrono::high_resolution_clock::now();
-            tmp_E_lock = static_cast<int>(d_preamble_synchronized);
+            tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
             tmp_P_ts = std::chrono::high_resolution_clock::now();
-            tmp_P_lock = static_cast<int>(d_preamble_synchronized);
+            tmp_P_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
             tmp_L_ts = std::chrono::high_resolution_clock::now();
-            tmp_L_lock = static_cast<int>(d_preamble_synchronized);
+            tmp_L_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
 
             if (trk_parameters.track_pilot)
                 {
