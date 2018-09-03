@@ -62,6 +62,8 @@
 
 using google::LogMessage;
 
+auto timer_start = std::chrono::high_resolution_clock::now();
+
 dll_pll_veml_tracking_sptr dll_pll_veml_make_tracking(const Dll_Pll_Conf &conf_)
 {
     return dll_pll_veml_tracking_sptr(new dll_pll_veml_tracking(conf_));
@@ -881,11 +883,11 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             unsigned long int tmp_long_int;
             std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
             int tmp_E_lock, tmp_P_lock, tmp_L_lock;
-            tmp_E_ts = std::chrono::high_resolution_clock::now();
+            tmp_E_ts = (std::chrono::high_resolution_clock::now() - timer_start);
             tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_P_ts = std::chrono::high_resolution_clock::now();
+            tmp_P_ts = (std::chrono::high_resolution_clock::now() - timer_start);
             tmp_P_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_L_ts = std::chrono::high_resolution_clock::now();
+            tmp_L_ts = (std::chrono::high_resolution_clock::now() - timer_start);
             tmp_L_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
 
             if (trk_parameters.track_pilot)
@@ -924,9 +926,9 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     tmp_VE = 0.0;
                     tmp_VL = 0.0;
                 }
-            tmp_E = std::abs<float>(d_E_accu);
-            tmp_P = std::abs<float>(d_P_accu);
-            tmp_L = std::abs<float>(d_L_accu);
+            tmp_E = <float>(d_E_accu);  //removed abs()
+            tmp_P = <float>(d_P_accu);
+            tmp_L = <float>(d_L_accu);
             if (integrating)
                 {
                     //TODO: Improve this solution!
