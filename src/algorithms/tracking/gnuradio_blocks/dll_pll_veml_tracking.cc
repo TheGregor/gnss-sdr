@@ -926,9 +926,9 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     tmp_VE = 0.0;
                     tmp_VL = 0.0;
                 }
-            tmp_E = reinterpret_cast<float>(d_E_accu);  //removed abs()
-            tmp_P = reinterpret_cast<float>(d_P_accu);
-            tmp_L = reinterpret_cast<float>(d_L_accu);
+            tmp_E = d_E_accu;  //removed abs()
+            tmp_P = d_P_accu;
+            tmp_L = d_L_accu;
             if (integrating)
                 {
                     //TODO: Improve this solution!
