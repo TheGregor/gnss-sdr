@@ -885,11 +885,11 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             int tmp_E_ts, tmp_P_ts, tmp_L_ts;
             int tmp_E_lock, tmp_P_lock, tmp_L_lock;
             rec_start = (std::chrono::high_resolution_clock::now() - timer_start);
-            tmp_E_ts = static_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
+            tmp_E_ts = reinterpret_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
             tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_P_ts = static_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
+            tmp_P_ts = reinterpret_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
             tmp_P_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_L_ts = static_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
+            tmp_L_ts = reinterpret_cast<int>(std::chrono::high_resolution_clock::now() - rec_start) / 1000000;
             tmp_L_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
 
             if (trk_parameters.track_pilot)
