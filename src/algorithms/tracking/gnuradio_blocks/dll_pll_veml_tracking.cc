@@ -872,7 +872,7 @@ void dll_pll_veml_tracking::save_correlation_results()
 
 void dll_pll_veml_tracking::log_data(bool integrating)
 {
-       std::chrono::high_resolution_clock::time_point rec_start = (std::chrono::high_resolution_clock::now() - timer_start);
+       std::chrono::high_resolution_clock::time_point rec_start = std::chrono::high_resolution_clock::now();
 
     if (trk_parameters.dump)
         {
@@ -883,13 +883,15 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             float tmp_float;
             double tmp_double;
             unsigned long int tmp_long_int;
-            std::chrono::high_resolution_clock::time_point tmp_E_ts, tmp_P_ts, tmp_L_ts;
+            double tmp_E_ts, tmp_P_ts, tmp_L_ts;
+            std::chrono::high_resolution_clock::time_point current_time = std::chrono::high_resolution_clock::now();
+            duration<double> timer = duration_cast<duration<double>>(current_time - rec_start);
             //int tmp_E_lock, tmp_P_lock, tmp_L_lock;
-            tmp_E_ts = ((std::chrono::high_resolution_clock::now() - rec_start)/std::nano::den);
+            tmp_E_ts = timer.count() * 1000;
             //tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_P_ts = ((std::chrono::high_resolution_clock::now() - rec_start)/std::nano::den);
+            tmp_P_ts = timer.count() * 1000;
             //tmp_P_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_L_ts = ((std::chrono::high_resolution_clock::now() - rec_start)/std::nano::den);
+            tmp_L_ts = timer.count() * 1000;
             //tmp_L_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
 
             if (trk_parameters.track_pilot)
@@ -951,13 +953,13 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     // Dump correlators output
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VE), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_E), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_ts), sizeof(std::chrono::system_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_ts), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_E_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_P), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_ts), sizeof(std::chrono::system_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_ts), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_P_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_ts), sizeof(std::chrono::system_clock::time_point));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_ts), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_L_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     // PROMPT I and Q (to analyze navigation symbols)
@@ -1010,13 +1012,11 @@ int dll_pll_veml_tracking::save_matfile()
 {
     // READ DUMP FILE
     std::ifstream::pos_type size;
-    int number_of_double_vars = 1;
+    int number_of_double_vars = 4;
     int number_of_float_vars = 17;
-    int number_of_time_vars = 3;
     //int number_of_int_vars = 3;
     int epoch_size_bytes = sizeof(unsigned long int) + sizeof(double) * number_of_double_vars +
-                           sizeof(float) * number_of_float_vars + sizeof(unsigned int) + 
-                           sizeof(std::chrono::system_clock::time_point) * number_of_time_vars;
+                           sizeof(float) * number_of_float_vars + sizeof(unsigned int);
     std::ifstream dump_file;
     dump_file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
     try
@@ -1042,13 +1042,13 @@ int dll_pll_veml_tracking::save_matfile()
         }
     float *abs_VE = new float[num_epoch];
     float *abs_E = new float[num_epoch];
-    std::chrono::system_clock::time_point *abs_E_ts = new std::chrono::system_clock::time_point[num_epoch];
+    double *abs_E_ts = new double[num_epoch];
     //int *abs_E_lock = new int[num_epoch];
     float *abs_P = new float[num_epoch];
-    std::chrono::system_clock::time_point *abs_P_ts = new std::chrono::system_clock::time_point[num_epoch];
+    double *abs_P_ts = new double[num_epoch];
     //int *abs_P_lock = new int[num_epoch];
     float *abs_L = new float[num_epoch];
-    std::chrono::system_clock::time_point  *abs_L_ts = new std::chrono::system_clock::time_point[num_epoch];
+    double  *abs_L_ts = new double[num_epoch];
     //int *abs_L_lock = new int[num_epoch];
     float *abs_VL = new float[num_epoch];
     float *Prompt_I = new float[num_epoch];
@@ -1075,13 +1075,13 @@ int dll_pll_veml_tracking::save_matfile()
                         {
                             dump_file.read(reinterpret_cast<char *>(&abs_VE[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&abs_E[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(std::chrono::system_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_E_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_P[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(std::chrono::system_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_L[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(std::chrono::system_clock::time_point));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
@@ -1153,7 +1153,7 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_E_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_ts, 0);
+            matvar = Mat_VarCreate("abs_E_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_E_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1165,7 +1165,7 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_P_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_ts, 0);
+            matvar = Mat_VarCreate("abs_P_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_P_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1177,7 +1177,7 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_L_ts", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_ts, 0);
+            matvar = Mat_VarCreate("abs_L_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_L_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
