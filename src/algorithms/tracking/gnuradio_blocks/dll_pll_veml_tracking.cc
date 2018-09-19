@@ -885,7 +885,7 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             unsigned long int tmp_long_int;
             double tmp_E_ts, tmp_P_ts, tmp_L_ts;
             std::chrono::high_resolution_clock::time_point current_time = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> timer = duration_cast<duration<double>>(current_time - rec_start);
+            std::chrono::duration<double> timer = std::chrono::duration_cast<std::chrono::duration<double>>(current_time - rec_start);
             //int tmp_E_lock, tmp_P_lock, tmp_L_lock;
             tmp_E_ts = timer.count() * 1000;
             //tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
