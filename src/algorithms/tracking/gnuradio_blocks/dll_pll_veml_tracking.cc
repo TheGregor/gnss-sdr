@@ -877,20 +877,17 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             // Dump results to file
             float prompt_I;
             float prompt_Q;
-            float tmp_VE, tmp_E, tmp_P, tmp_L, tmp_VL;
+            float tmp_E, tmp_P, tmp_L;
+            float tmp_VE, tmp_E_I, tmp_E_R, tmp_P_I, tmp_P_R, tmp_L_I, tmp_L_R, tmp_VL;
             float tmp_float;
             double tmp_double;
             unsigned long int tmp_long_int;
-            double tmp_E_ts, tmp_P_ts, tmp_L_ts;
+            double tmp_E_T, tmp_P_T, tmp_L_T;
             std::chrono::high_resolution_clock::time_point current_time = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> timer = std::chrono::duration_cast<std::chrono::duration<double>>(current_time - timer_start);
-            //int tmp_E_lock, tmp_P_lock, tmp_L_lock;
-            tmp_E_ts = timer.count();
-            //tmp_E_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_P_ts = timer.count();
-            //tmp_P_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
-            tmp_L_ts = timer.count();
-            //tmp_L_lock = static_cast<int>(dll_pll_veml_tracking::preamble_correlated());
+            tmp_E_T = timer.count();
+            tmp_P_T = timer.count();
+            tmp_L_T = timer.count();
 
             if (trk_parameters.track_pilot)
                 {
@@ -929,8 +926,15 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     tmp_VL = 0.0;
                 }
             tmp_E = std::abs<float>(d_E_accu);
+            tmp_E_I = d_E_accu.imag();
+            tmp_E_R = d_E_accu.real();
             tmp_P = std::abs<float>(d_P_accu);
+            tmp_P_I = d_P_accu.imag();
+            tmp_P_R = d_P_accu.real();
             tmp_L = std::abs<float>(d_L_accu);
+            tmp_L_I = d_L_accu.imag();
+            tmp_L_R = d_L_accu.real();
+
             if (integrating)
                 {
                     //TODO: Improve this solution!
@@ -951,13 +955,19 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     // Dump correlators output
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VE), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_E), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_ts), sizeof(double));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_I), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_R), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_E_T), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_E_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_P), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_ts), sizeof(double));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_I), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_R), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_P_T), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_P_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_ts), sizeof(double));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_I), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_R), sizeof(float));
+                    d_dump_file.write(reinterpret_cast<char *>(&tmp_L_T), sizeof(double));
                     //d_dump_file.write(reinterpret_cast<char *>(&tmp_L_lock), sizeof(int));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     // PROMPT I and Q (to analyze navigation symbols)
@@ -1011,7 +1021,7 @@ int dll_pll_veml_tracking::save_matfile()
     // READ DUMP FILE
     std::ifstream::pos_type size;
     int number_of_double_vars = 4;
-    int number_of_float_vars = 17;
+    int number_of_float_vars = 23;
     //int number_of_int_vars = 3;
     int epoch_size_bytes = sizeof(unsigned long int) + sizeof(double) * number_of_double_vars +
                            sizeof(float) * number_of_float_vars + sizeof(unsigned int);
@@ -1040,13 +1050,19 @@ int dll_pll_veml_tracking::save_matfile()
         }
     float *abs_VE = new float[num_epoch];
     float *abs_E = new float[num_epoch];
-    double *abs_E_ts = new double[num_epoch];
+    float *abs_E_I = new float[num_epoch];
+    float *abs_E_R = new float[num_epoch];
+    double *abs_E_T = new double[num_epoch];
     //int *abs_E_lock = new int[num_epoch];
     float *abs_P = new float[num_epoch];
-    double *abs_P_ts = new double[num_epoch];
+    float *abs_P_I = new float[num_epoch];
+    float *abs_P_R = new float[num_epoch];
+    double *abs_P_T = new double[num_epoch];
     //int *abs_P_lock = new int[num_epoch];
     float *abs_L = new float[num_epoch];
-    double  *abs_L_ts = new double[num_epoch];
+    float *abs_L_I = new float[num_epoch];
+    float *abs_L_R = new float[num_epoch];
+    double  *abs_L_T = new double[num_epoch];
     //int *abs_L_lock = new int[num_epoch];
     float *abs_VL = new float[num_epoch];
     float *Prompt_I = new float[num_epoch];
@@ -1073,13 +1089,19 @@ int dll_pll_veml_tracking::save_matfile()
                         {
                             dump_file.read(reinterpret_cast<char *>(&abs_VE[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&abs_E[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_E_ts[i]), sizeof(double));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_I[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_R[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_E_T[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_E_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_P[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_P_ts[i]), sizeof(double));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_I[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_R[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_P_T[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_L[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_L_ts[i]), sizeof(double));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_I[i]), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_R[i]). sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_T[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
@@ -1106,13 +1128,19 @@ int dll_pll_veml_tracking::save_matfile()
             std::cerr << "Problem reading dump file:" << e.what() << std::endl;
             delete[] abs_VE;
             delete[] abs_E;
-            delete[] abs_E_ts;
+            delete[] abs_E_I;
+            delete[] abs_E_R;
+            delete[] abs_E_T;
             //delete[] abs_E_lock;
             delete[] abs_P;
-            delete[] abs_P_ts;
+            delete[] abs_P_I;
+            delete[] abs_P_R;
+            delete[] abs_P_T;
             //delete[] abs_P_lock;
             delete[] abs_L;
-            delete[] abs_L_ts;
+            delete[] abs_L_I;
+            delete[] abs_L_R;
+            delete[] abs_L_T;
             //delete[] abs_L_lock;
             delete[] abs_VL;
             delete[] Prompt_I;
@@ -1151,7 +1179,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_E_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_E_ts, 0);
+            matvar = Mat_VarCreate("abs_E_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_E_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_E_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_E_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1163,7 +1199,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_P_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_P_ts, 0);
+            matvar = Mat_VarCreate("abs_P_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_P_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_P_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_P_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1175,7 +1219,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_L_ts", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_L_ts, 0);
+            matvar = Mat_VarCreate("abs_L_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_L_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
+            Mat_VarFree(matvar);
+
+            matvar = Mat_VarCreate("abs_L_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_L_ts, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1250,13 +1302,19 @@ int dll_pll_veml_tracking::save_matfile()
     Mat_Close(matfp);
     delete[] abs_VE;
     delete[] abs_E;
-    delete[] abs_E_ts;
+    delete[] abs_E_I;
+    delete[] abs_E_R;
+    delete[] abs_E_T;
     //delete[] abs_E_lock;
     delete[] abs_P;
-    delete[] abs_P_ts;
+    delete[] abs_P_I;
+    delete[] abs_P_R;
+    delete[] abs_P_T;
     //delete[] abs_P_lock;
     delete[] abs_L;
-    delete[] abs_L_ts;
+    delete[] abs_L_I;
+    delete[] abs_L_R;
+    delete[] abs_L_T;
     //delete[] abs_L_lock;
     delete[] abs_VL;
     delete[] Prompt_I;
