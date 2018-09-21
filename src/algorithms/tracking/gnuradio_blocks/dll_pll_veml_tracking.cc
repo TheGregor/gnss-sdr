@@ -1100,7 +1100,7 @@ int dll_pll_veml_tracking::save_matfile()
                             //dump_file.read(reinterpret_cast<char *>(&abs_P_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_L[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&abs_L_I[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&abs_L_R[i]). sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&abs_L_R[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&abs_L_T[i]), sizeof(double));
                             //dump_file.read(reinterpret_cast<char *>(&abs_L_lock[i]), sizeof(int));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
@@ -1179,15 +1179,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_E_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_E_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_I, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_E_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_E_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E_R, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_E_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_E_ts, 0);
+            matvar = Mat_VarCreate("abs_E_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_E_T, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1199,15 +1199,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_P_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_P_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_I, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_P_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_P_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_P_R, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_P_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_P_ts, 0);
+            matvar = Mat_VarCreate("abs_P_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_P_T, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1219,15 +1219,15 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_L_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_L_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_I, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_L_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_E, 0);
+            matvar = Mat_VarCreate("abs_L_R", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, abs_L_R, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("abs_L_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_L_ts, 0);
+            matvar = Mat_VarCreate("abs_L_T", MAT_C_DOUBLE, MAT_T_DOUBLE, 2, dims, abs_L_T, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
