@@ -1105,8 +1105,8 @@ int dll_pll_veml_tracking::save_matfile()
                             dump_file.read(reinterpret_cast<char *>(&L_R[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&L_T[i]), sizeof(double));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&CN0_Samples), sizeof(int));
-                            dump_file.read(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(float));
+                            dump_file.read(reinterpret_cast<char *>(&CN0_Samples[i]), sizeof(int));
+                            dump_file.read(reinterpret_cast<char *>(&Sig_Strng_dB_Hz[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_Q[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&PRN_start_sample_count[i]), sizeof(unsigned long int));
