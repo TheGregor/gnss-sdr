@@ -1067,8 +1067,8 @@ int dll_pll_veml_tracking::save_matfile()
     float *L_R = new float[num_epoch];
     double *L_T = new double[num_epoch];
     float *abs_VL = new float[num_epoch];
-    float *CN0_Samples = new float[num_epoch];
-    int *Sig_Strng_dB_Hz = new int[num_epoch];
+    float *CN0_Samples = new int[num_epoch];
+    int *Sig_Strng_dB_Hz = new float[num_epoch];
     float *Prompt_I = new float[num_epoch];
     float *Prompt_Q = new float[num_epoch];
     unsigned long int *PRN_start_sample_count = new unsigned long int[num_epoch];
