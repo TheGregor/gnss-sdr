@@ -972,8 +972,8 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L_T), sizeof(double));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     // Signal strength / number of samples taken 
-                    d_dump_file.write(reinterpret_cast<char *>(&CN0_Samples), sizeof(float));
-                    d_dump_file.write(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(int));
+                    d_dump_file.write(reinterpret_cast<char *>(&CN0_Samples), sizeof(int));
+                    d_dump_file.write(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(float));
                     // PROMPT I and Q (to analyze navigation symbols)
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_I), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_Q), sizeof(float));
@@ -1105,8 +1105,8 @@ int dll_pll_veml_tracking::save_matfile()
                             dump_file.read(reinterpret_cast<char *>(&L_R[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&L_T[i]), sizeof(double));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&CN0_Samples), sizeof(float));
-                            dump_file.read(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(int));
+                            dump_file.read(reinterpret_cast<char *>(&CN0_Samples), sizeof(int));
+                            dump_file.read(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_Q[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&PRN_start_sample_count[i]), sizeof(unsigned long int));
