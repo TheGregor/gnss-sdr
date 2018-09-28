@@ -973,7 +973,7 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
                     // Signal strength / number of samples taken 
                     d_dump_file.write(reinterpret_cast<char *>(&CN0_Samples), sizeof(float));
-                    d_dump_file_write(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(int));
+                    d_dump_file.write(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(int));
                     // PROMPT I and Q (to analyze navigation symbols)
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_I), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_Q), sizeof(float));
@@ -1229,7 +1229,7 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("CN0_Samples", MAT_C_INT, MAT_T_INT, 2, dims, CN0_Samples, 0);
+            matvar = Mat_VarCreate("CN0_Samples", MAT_C_INT16, MAT_T_INT16, 2, dims, CN0_Samples, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
@@ -1300,17 +1300,17 @@ int dll_pll_veml_tracking::save_matfile()
     Mat_Close(matfp);
     delete[] abs_VE;
     delete[] abs_E;
-    delete[] abs_E_I;
-    delete[] abs_E_R;
-    delete[] abs_E_T;
+    delete[] E_I;
+    delete[] E_R;
+    delete[] E_T;
     delete[] abs_P;
-    delete[] abs_P_I;
-    delete[] abs_P_R;
-    delete[] abs_P_T;
+    delete[] P_I;
+    delete[] P_R;
+    delete[] P_T;
     delete[] abs_L;
-    delete[] abs_L_I;
-    delete[] abs_L_R;
-    delete[] abs_L_T;
+    delete[] L_I;
+    delete[] L_R;
+    delete[] L_T;
     delete[] abs_VL;
     delete[] CN0_Samples;
     delete[] Sig_Strng_dB_Hz;
