@@ -879,7 +879,6 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             float prompt_Q;
             float tmp_E, tmp_P, tmp_L;
             float tmp_VE, tmp_E_I, tmp_E_R, tmp_P_I, tmp_P_R, tmp_L_I, tmp_L_R, tmp_VL;
-            float Sig_Strng_dB_Hz;
             float tmp_float;
             double tmp_double;
             int CN0_Samples;
@@ -937,7 +936,6 @@ void dll_pll_veml_tracking::log_data(bool integrating)
             tmp_L_I = d_L_accu.imag();
             tmp_L_R = d_L_accu.real();
             CN0_Samples = trk_parameters.cn0_samples;
-            Sig_Strng_dB_Hz = d_CN0_SNV_dB_Hz;
 
             if (integrating)
                 {
@@ -971,9 +969,8 @@ void dll_pll_veml_tracking::log_data(bool integrating)
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L_R), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_L_T), sizeof(double));
                     d_dump_file.write(reinterpret_cast<char *>(&tmp_VL), sizeof(float));
-                    // Signal strength / number of samples taken 
+                    // Number of samples taken 
                     d_dump_file.write(reinterpret_cast<char *>(&CN0_Samples), sizeof(int));
-                    d_dump_file.write(reinterpret_cast<char *>(&Sig_Strng_dB_Hz), sizeof(float));
                     // PROMPT I and Q (to analyze navigation symbols)
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_I), sizeof(float));
                     d_dump_file.write(reinterpret_cast<char *>(&prompt_Q), sizeof(float));
@@ -1025,7 +1022,7 @@ int dll_pll_veml_tracking::save_matfile()
     // READ DUMP FILE
     std::ifstream::pos_type size;
     int number_of_double_vars = 4;
-    int number_of_float_vars = 24;
+    int number_of_float_vars = 23;
     int number_of_int_vars = 1;
     int epoch_size_bytes = sizeof(unsigned long int) + sizeof(double) * number_of_double_vars +
                            sizeof(float) * number_of_float_vars + sizeof(int) * number_of_int_vars + 
@@ -1068,7 +1065,6 @@ int dll_pll_veml_tracking::save_matfile()
     double *L_T = new double[num_epoch];
     float *abs_VL = new float[num_epoch];
     int *CN0_Samples = new int[num_epoch];
-    float *Sig_Strng_dB_Hz = new float[num_epoch];
     float *Prompt_I = new float[num_epoch];
     float *Prompt_Q = new float[num_epoch];
     unsigned long int *PRN_start_sample_count = new unsigned long int[num_epoch];
@@ -1106,7 +1102,6 @@ int dll_pll_veml_tracking::save_matfile()
                             dump_file.read(reinterpret_cast<char *>(&L_T[i]), sizeof(double));
                             dump_file.read(reinterpret_cast<char *>(&abs_VL[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&CN0_Samples[i]), sizeof(int));
-                            dump_file.read(reinterpret_cast<char *>(&Sig_Strng_dB_Hz[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_I[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&Prompt_Q[i]), sizeof(float));
                             dump_file.read(reinterpret_cast<char *>(&PRN_start_sample_count[i]), sizeof(unsigned long int));
@@ -1144,7 +1139,6 @@ int dll_pll_veml_tracking::save_matfile()
             delete[] L_T;
             delete[] abs_VL;
             delete[] CN0_Samples;
-            delete[] Sig_Strng_dB_Hz;
             delete[] Prompt_I;
             delete[] Prompt_Q;
             delete[] PRN_start_sample_count;
@@ -1233,10 +1227,6 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("Sig_Strng_dB_Hz", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, Sig_Strng_dB_Hz, 0);
-            Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
-            Mat_VarFree(matvar);
-
             matvar = Mat_VarCreate("Prompt_I", MAT_C_SINGLE, MAT_T_SINGLE, 2, dims, Prompt_I, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
@@ -1313,7 +1303,6 @@ int dll_pll_veml_tracking::save_matfile()
     delete[] L_T;
     delete[] abs_VL;
     delete[] CN0_Samples;
-    delete[] Sig_Strng_dB_Hz;
     delete[] Prompt_I;
     delete[] Prompt_Q;
     delete[] PRN_start_sample_count;
