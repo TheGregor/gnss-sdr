@@ -1229,7 +1229,7 @@ int dll_pll_veml_tracking::save_matfile()
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
-            matvar = Mat_VarCreate("CN0_Samples", MAT_C_INT16, MAT_T_INT16, 2, dims, CN0_Samples, 0);
+            matvar = Mat_VarCreate("CN0_Samples", MAT_C_INT32, MAT_T_INT32, 2, dims, CN0_Samples, 0);
             Mat_VarWrite(matfp, matvar, MAT_COMPRESSION_ZLIB);  // or MAT_COMPRESSION_NONE
             Mat_VarFree(matvar);
 
