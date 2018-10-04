@@ -666,7 +666,7 @@ bool dll_pll_veml_tracking::cn0_and_tracking_lock_status(double coh_integration_
 {
     // ####### CN0 ESTIMATION AND LOCK DETECTORS ######
 
-    if (d_cn0_estimation_counter < trk_parameters.cn0_samples)
+    if (d_cn0_estimation_counter < trk_parameters.cn0_samples-1)
         {
             // fill buffer with prompt correlator output values
             d_Prompt_buffer[d_cn0_estimation_counter] = d_P_accu;
